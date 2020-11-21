@@ -86,7 +86,7 @@ class ChatBox extends Dom {
 };
 
 class Initial extends Dom {
-  rootDom = 'div.join-dialog';  
+  rootDom = 'div.join-dialog';
   middleDom = ' div[role="tablist"]';
   closeButtonDom = ' > button[type="button"]';
   // closeDialogDom = this.rootDom + this.middleDom + this.closeButtonDom;
@@ -145,37 +145,46 @@ class Doc {
 
 async function run() {
   const browser = await browserFunc();
-  // lol
-  // Only one tab. Not sure if this is needed
+
+    // const page = await browser.newPage();
+    // let pageUrl = "http://localhost/";
+
+    // await page.goto( pageUrl, {
+    //     waitUntil: 'networkidle0' // 'networkidle0' is very useful for SPAs.
+    // } );
+
   const pages = await browser.pages();
   const page = pages[ 0 ];
 
-  const doc = new Doc( page );
-  
-  console.log( 'lol1' );
-  // await page.waitForSelector( 'button.join-dialog__close' );
+  await page.screenshot( { path: "image.jpg", type: "jpeg" } );
+
+  return true;
+
+  // lol
+  // Only one tab. Not sure if this is needed
+  // const pages = await browser.pages();
+  // const page = pages[ 0 ];
+
+  // const doc = new Doc( page );  
+  // console.log( 'lol1' );
 
   // const waitingRoomDom = 'section.waiting-room-list-conatiner__wr-scrollbar'
-  // await page.click( 'button.join-dialog__close' );
   
-  // Waits until the `title` meta element is rendered
-  await page.waitForSelector( 'title' );
-  // Fetches page's title
-  const title = await page.title();
+  // await page.waitForSelector( 'title' );
+  // const title = await page.title();
   
-  console.info( `The title 2: ${ title }` );
+  // console.info( `The title 2: ${ title }` );
 
-  await doc.initial.closeDialog();
-  console.log( 'lol2' );
+  // await doc.initial.closeDialog();
+  // console.log( 'lol2' );
 
-  await doc.controls.activateParticipants();
-  console.log( 'lol3' );
-  await doc.controls.deactivateParticipants();
-  console.log( 'lol4' );
+  // await doc.controls.activateParticipants();
+  // console.log( 'lol3' );
+  // await doc.controls.deactivateParticipants();
+  // console.log( 'lol4' );
+
+  // console.info( `The title 3: ${ title }` );
+};
+
 run();
 
-  console.info( `The title 3: ${ title }` );
-  // Probably never run the below?
-  // await browser.close();
-  // await chrome.kill();
-} )();
