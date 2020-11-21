@@ -145,12 +145,25 @@ async function run() {
     logger.info( '--- END ---' );
   };
 
-    // const page = await browser.newPage();
-    // let pageUrl = "http://localhost/";
+  async function pSelector( sel ) {
+    return await essential( 'waitForSelector', sel );
+  };
 
-    // await page.goto( pageUrl, {
-    //     waitUntil: 'networkidle0' // 'networkidle0' is very useful for SPAs.
-    // } );
+  async function pClick( sel ) {
+    return await essential( 'click', sel );
+  };
+
+  const browser = await puppeteer.launch( { headless: false } );
+  const page = await browser.newPage();
+  
+  let pageUrl = 'http://localhost/';
+  await page.goto( pageUrl, {
+    waitUntil: 'networkidle0' 
+  } );
+
+  // OR trying to attach still
+
+  const browser = await browserFunc();
 
   const pages = await browser.pages();
   const page = pages[ 0 ];
@@ -159,31 +172,14 @@ async function run() {
 
   return true;
 
-  // lol
-  // Only one tab. Not sure if this is needed
-  // const pages = await browser.pages();
-  // const page = pages[ 0 ];
-
-  // const doc = new Doc( page );  
-  // console.log( 'lol1' );
-
-  // const waitingRoomDom = 'section.waiting-room-list-conatiner__wr-scrollbar'
+  // reload
+  await page.reload( { waitUntil: [ 'networkidle0', 'domcontentloaded' ] } );
+  //  OR
+  await page.evaluate( () => {
+   location.reload( true );
+  } );
   
-  // await page.waitForSelector( 'title' );
-  // const title = await page.title();
   
-  // console.info( `The title 2: ${ title }` );
-
-  // await doc.initial.closeDialog();
-  // console.log( 'lol2' );
-
-  // await doc.controls.activateParticipants();
-  // console.log( 'lol3' );
-  // await doc.controls.deactivateParticipants();
-  // console.log( 'lol4' );
-
-  // console.info( `The title 3: ${ title }` );
-};
 
 run();
 
