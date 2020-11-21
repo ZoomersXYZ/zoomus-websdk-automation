@@ -161,25 +161,48 @@ async function run() {
     waitUntil: 'networkidle0' 
   } );
 
-  // OR trying to attach still
 
-  const browser = await browserFunc();
+  // Initializaing
+  let sel = undefined;
+  await page.setViewport( { width: 1200, height: 900 } );  
 
-  const pages = await browser.pages();
-  const page = pages[ 0 ];
 
-  await page.screenshot( { path: "image.jpg", type: "jpeg" } );
+  sel = '#root > div > .form > .MuiButtonBase-root > .MuiButton-label';
+  await pSelector( sel );
+  await isVisible( sel );
+  await pSelector( sel );
+  await pClick( sel );
 
-  return true;
-
-  // reload
-  await page.reload( { waitUntil: [ 'networkidle0', 'domcontentloaded' ] } );
-  //  OR
-  await page.evaluate( () => {
-   location.reload( true );
-  } );
   
+  sel = '.meeting-client-inner > .join-dialog > div > .zmu-tabs > .zmu-tabs__tab-container';
+  await pSelector( sel );
+  await isVisible( sel );
+  await pSelector( sel );
+  await pClick( sel );
   
+  sel = '.zmu-tabs > .zmu-tabs__tab-container > .zmu-tabs__tabs-list > #voip > .tab-bar-node';
+  await pSelector( sel );
+  await isVisible( sel );
+  await pSelector( sel );
+  await pClick( sel );
+
+  sel = '.zmu-tabs > .zmu-tabs__tab-container > .zmu-tabs__tabs-list > #phone > .tab-bar-node';
+  await pSelector( sel );
+  await isVisible( sel );
+  await pSelector( sel );
+  await pClick( sel );
+  sel = '.zmu-tabs__tab-container > .zmu-tabs__tabs-list > #voip > .tab-bar-node > .tab-bar-node__text';
+  await pSelector( sel );
+  await isVisible( sel );
+  await pSelector( sel );
+  await pClick( sel );
+  sel = '.join-dialog > div > .zmu-tabs > .zmu-tabs__tab-container > .zm-btn';
+  await pSelector( sel );
+  await isVisible( sel );
+  await pSelector( sel );
+  await pClick( sel );
+  
+  // await browser.close();
+} );
 
 run();
-
