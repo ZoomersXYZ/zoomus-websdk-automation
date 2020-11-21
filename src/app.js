@@ -1,8 +1,9 @@
-const puppeteer = require( 'puppeteer-core' );
+const puppeteer = require( 'puppeteer' );
+// const puppeteer = require( 'puppeteer-core' );
 const axios = require( 'axios' );
-const fs = require( 'fs' );
 
-const browserFunc = async () => {
+const logger = console;
+async function browserFunc() {
   const CHROME_PORT = 9222
   const response = await axios.get( `http://localhost:${ CHROME_PORT }/json/version` );
   const { webSocketDebuggerUrl } = response.data;
@@ -12,48 +13,7 @@ const browserFunc = async () => {
 class Dom {
   constructor( thePage ) {
     this.S = ' ';
-    this.page = thePage;    
-  };
-
-  async isVisible( css ) {
-    if ( !css ) {
-      console.warn( 'inVisible CSS arg is falsey') ;
-      return false;
-    };
-
-    try {
-      await this.page.$eval( css, ( elem ) => 
-      window.getComputedStyle( elem )
-            .getPropertyValue( 'display' ) !== 'none' 
-            && elem.offsetHeight
-      );
-    } catch ( e ) {
-      if ( e.sender === undefined ) {
-        console.warn( 'warn: isVisible received undefined?' );
-        console.log( 'CSS, ', css );
-        return false;
-      };
-      return false;
-    };
-
-  };
-
-  async waitForSelector( css ) {
-    if ( !css ) {
-      console.warn( 'waitForSelector CSS arg is falsey') ;
-      return false;
-    };
-
-    try {
-      await this.page.waitForSelector( css )
-    } catch ( e ) {
-      if ( e.sender === undefined ) {
-        console.warn( 'warn: waitForSelector received undefined?' );
-        console.log( 'CSS, ', css );
-        return false;
-      };
-      return false;
-    };
+    this.page = thePage;
   };
 };
 
@@ -113,7 +73,77 @@ class Doc {
 };
 
 async function run() {
-  const browser = await browserFunc();
+  // Functions
+  async function isVisibleCommand( sel ) {
+    return await this.page.$eval( sel, ( elem ) => 
+      ( window.getComputedStyle( elem )
+        .getPropertyValue( 'display' ) 
+        !== 'none' )
+        && 
+        elem.offsetHeight
+    );
+  };
+
+  async function isVisible( sel, pause = 500 ) {
+    if ( !sel ) {
+      logger.warn( 'inVisible CSS arg is falsey') ;
+      return false;
+    };
+
+    await page.waitForTimeout( pause );
+    try {
+      await isVisibleCommand( sel )
+
+    } catch ( e ) {
+
+      logger.warn( 'Failed the first time: ', sel );
+      await page.waitForTimeout( 1000 );
+      try {
+        await isVisibleCommand( sel )
+      } catch ( e ) {
+
+        if ( e.sender === undefined ) {
+          logger.warn( 'warn: isVisible received undefined?' );
+          logger.info( 'CSS, ', sel );
+          return false;
+        };
+
+        logger.error( 'isVisible fail: ', sel );
+        logger.error( 'isVisible - ERR Sender: ', e.sender );
+        logger.error( 'isVisible - ERR: ', e );
+
+        return false;
+      };
+    };
+  };
+
+  async function essential( method, sel, timeOut = 5000, pause = 1000 ) {
+    logger.info( '--- START ---' );
+    logger.info( 'METHOD: ', method );
+    logger.info( 'SEL: ', sel );
+
+    await page.waitForTimeout( pause );
+    try {
+      await page[ method ]( sel, {
+        timeout: timeOut
+      } );
+    } catch ( e ) {
+
+      logger.warn( 'Failed the first time: ', sel );
+      await page.waitForTimeout( 1000 );
+      try {
+        await page[ method ]( sel, {
+          timeout: timeOut
+        } );
+      } catch ( e ) {
+
+        logger.error( `2nd fail - ${ method }: `, sel );
+        logger.error( `${ method } - ERR Sender: `, e.sender );
+        logger.error( `${ method } - ERR: `, e );
+      };
+    };
+    logger.info( '--- END ---' );
+  };
 
     // const page = await browser.newPage();
     // let pageUrl = "http://localhost/";
