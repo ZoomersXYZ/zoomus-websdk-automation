@@ -89,47 +89,16 @@ class Initial extends Dom {
   rootDom = 'div.join-dialog';
   middleDom = ' div[role="tablist"]';
   closeButtonDom = ' > button[type="button"]';
-  // closeDialogDom = this.rootDom + this.middleDom + this.closeButtonDom;
-  // closeDialogDom = '.join-dialog > div > .zmu-tabs > .zmu-tabs__tab-container > .zm-btn';
-  // closeDialogDom = '.join-dialog > div > .zmu-tabs > .zmu-tabs__tab-container > .zm-btn';
-  // closeDialogDom = 'div#zmmtg-root div.zmu-tabs__tab-container.zmu-tabs__tab-container--top > button[type="button"]';
-  // closeDialogDom = '.zm-btn .join-dialog__close .zm-btn--default .zm-btn__outline--blue';
+  closeDialogDom = this.rootDom + this.middleDom + this.closeButtonDom;
 
   async closeDialog() {
-
     // await this.page.waitFor(1500);
     // await this.page.waitForSelector(this.closeDialogDom);
     // await page.focus(this.closeDialogDom);
-
-    // await this.page.screenshot({ path: './image.jpg', type: 'jpeg' });
     await this.page.goto("http://localhost/");
     await this.page.screenshot({ path: "./image.jpg", type: "jpeg" });
     // await page.close();
     // await browser.close();
-
-// if ( !( await super.isVisible( this.closeDialogDom ) ) ) { 
-    //   console.log( '3' ); return false;
-    // };
-    console.log( 'hi1' );
-    // await this.page.click( this.closeDialogDom );
-    // let hi = null;
-    // try {
-    //   hi = await this.page.content();
-    // } catch( e ) {
-    //   console.error( 'fudge' );
-    // };
-    // console.log( 'hi', hi );
-
-    // fs.writeFileSync( 'test-sync.html', hi );
-    // fs.writeFile("/tmp/test", hi, function(err) {
-    //     if(err) {
-    //         return console.log(err);
-    //     }
-    //     console.log("The file was saved!");
-    // }); 
-    // console.log( 'hi2' );
-    // await page.click( '.join-dialog > div > .zmu-tabs > .zmu-tabs__tab-container > .zm-btn' );
-    // console.log( '3-3' );
   };
 };
 
