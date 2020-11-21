@@ -1,8 +1,14 @@
 const puppeteer = require( 'puppeteer' );
 // const puppeteer = require( 'puppeteer-core' );
 const axios = require( 'axios' );
+const log4js = require( 'log4js' );
 
-const logger = console;
+log4js.configure({
+  appenders: { automation: { type: 'file', filename: 'logs/automation.log' } },
+  categories: { default: { appenders: [ 'automation' ], level: 'info' } } 
+} );
+const logger = log4js.getLogger( 'automation' );
+
 async function browserFunc() {
   const CHROME_PORT = 9222
   const response = await axios.get( `http://localhost:${ CHROME_PORT }/json/version` );
@@ -22,15 +28,9 @@ class MeetingControls extends Dom {
   participantsDom = this.rootDom + ' ' + 'div.footer-button__participants-icon';
   
   async activateParticipants() {
-    if ( !( await super.isVisible( Participants.siblingheaderDom ) ) ) { console.log( '1' ); return false };
-    this.page.click( this.participantsDom );
-    console.log( '1-1' );
   };
 
   async deactivateParticipants() {
-    if ( await super.isVisible( Participants.siblingheaderDom ) ) { console.log( '2' ); return false };
-    this.page.click( this.participantsDom );
-    console.log( '2-2' );
   };
 };
 
@@ -52,13 +52,6 @@ class Initial extends Dom {
   closeDialogDom = this.rootDom + this.middleDom + this.closeButtonDom;
 
   async closeDialog() {
-    // await this.page.waitFor(1500);
-    // await this.page.waitForSelector(this.closeDialogDom);
-    // await page.focus(this.closeDialogDom);
-    await this.page.goto("http://localhost/");
-    await this.page.screenshot({ path: "./image.jpg", type: "jpeg" });
-    // await page.close();
-    // await browser.close();
   };
 };
 
@@ -153,7 +146,12 @@ async function run() {
     return await essential( 'click', sel );
   };
 
-  
+  //
+  // -> Base package
+
+  ////
+  // -> Core package  
+  ////
 
   const browser = await browserFunc();
   const pages = await browser.pages();
@@ -164,8 +162,16 @@ async function run() {
   //Change default navigation time
   await page.setDefaultNavigationTimeout( 30000 );
   let sel = undefined;
-  await page.setViewport( { width: 1200, height: 900 } );  
 
+  // reload
+  await page.reload( { waitUntil: [ 'networkidle0', 'domcontentloaded' ] } );
+  
+  await page.setViewport( { width: 1200, height: 900 } );  
+  
+
+  ////
+  // Actual automation
+  ////
 
   sel = '#root > div > .form > .MuiButtonBase-root > .MuiButton-label';
   await pSelector( sel );
@@ -173,7 +179,9 @@ async function run() {
   await pSelector( sel );
   await pClick( sel );
 
-  
+  //
+  // Zoom Room
+
   sel = '.meeting-client-inner > .join-dialog > div > .zmu-tabs > .zmu-tabs__tab-container';
   await pSelector( sel );
   await isVisible( sel );
@@ -185,17 +193,19 @@ async function run() {
   await isVisible( sel );
   await pSelector( sel );
   await pClick( sel );
-
+  
   sel = '.zmu-tabs > .zmu-tabs__tab-container > .zmu-tabs__tabs-list > #phone > .tab-bar-node';
   await pSelector( sel );
   await isVisible( sel );
   await pSelector( sel );
   await pClick( sel );
+  
   sel = '.zmu-tabs__tab-container > .zmu-tabs__tabs-list > #voip > .tab-bar-node > .tab-bar-node__text';
   await pSelector( sel );
   await isVisible( sel );
   await pSelector( sel );
   await pClick( sel );
+  
   sel = '.join-dialog > div > .zmu-tabs > .zmu-tabs__tab-container > .zm-btn';
   await pSelector( sel );
   await isVisible( sel );
