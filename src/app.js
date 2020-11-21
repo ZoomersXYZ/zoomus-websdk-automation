@@ -153,16 +153,16 @@ async function run() {
     return await essential( 'click', sel );
   };
 
-  const browser = await puppeteer.launch( { headless: false } );
-  const page = await browser.newPage();
   
-  let pageUrl = 'http://localhost/';
-  await page.goto( pageUrl, {
-    waitUntil: 'networkidle0' 
-  } );
 
+  const browser = await browserFunc();
+  const pages = await browser.pages();
+  const page = pages[ 0 ];
 
   // Initializaing
+  await page.setDefaultTimeout( 5000 );
+  //Change default navigation time
+  await page.setDefaultNavigationTimeout( 30000 );
   let sel = undefined;
   await page.setViewport( { width: 1200, height: 900 } );  
 
