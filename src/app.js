@@ -104,22 +104,22 @@ async function run() {
   // -> Core package  
   ////
 
+  // Initializaing
   const browser = await browserFunc();
   const pages = await browser.pages();
-  const page = pages[ 0 ];
+  const page = pages[ 0 ];  
 
-  // Initializaing
+  // Initializaing values
   await page.setDefaultTimeout( 5000 );
-  //Change default navigation time
   await page.setDefaultNavigationTimeout( 30000 );
+  await page.setViewport( { width: 1200, height: 900 } );  
   let sel = undefined;
 
-  // reload
-  await page.reload( { waitUntil: [ 'networkidle0', 'domcontentloaded' ] } );
+  // Reload
+  await page.reload( { 
+    waitUntil: [ 'networkidle0', 'domcontentloaded' ] } 
+  );
   
-  await page.setViewport( { width: 1200, height: 900 } );  
-  
-
   ////
   // Actual automation
   ////
