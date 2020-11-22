@@ -1,20 +1,6 @@
-const puppeteer = require( 'puppeteer' );
-// const puppeteer = require( 'puppeteer-core' );
-const axios = require( 'axios' );
-const log4js = require( 'log4js' );
+const browserFunc = require( './config/browserFunc' );
 
-log4js.configure({
-  appenders: { automation: { type: 'file', filename: 'logs/automation.log' } },
-  categories: { default: { appenders: [ 'automation' ], level: 'info' } } 
-} );
-const logger = log4js.getLogger( 'automation' );
-
-async function browserFunc() {
-  const CHROME_PORT = 9222
-  const response = await axios.get( `http://localhost:${ CHROME_PORT }/json/version` );
-  const { webSocketDebuggerUrl } = response.data;
-  return await puppeteer.connect( { browserWSEndpoint: webSocketDebuggerUrl } );  
-};
+const logger = require( './config/logger' );
 
 async function run() {
   // Functions
