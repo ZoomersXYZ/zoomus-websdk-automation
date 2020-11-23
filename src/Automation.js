@@ -15,64 +15,73 @@ class Automation {
     );
   };
 
-  async isVisible( sel, pause = 500 ) {
-    if ( !sel ) {
-      logger.warn( 'inVisible CSS arg is falsey') ;
-      return false;
-    };
-
-    await this.page.waitForTimeout( pause );
-    try {
-      await this.isVisibleCommand( sel )
-
-    } catch ( e ) {
-      logger.warn( 'Failed the first time: ', sel );
-      await this.page.waitForTimeout( 1000 );
-      try {
-        await this.isVisibleCommand( sel )
-      } catch ( e ) {
-
-        if ( e.sender === undefined ) {
-          logger.warn( 'warn: isVisible received undefined?' );
-          logger.info( 'CSS, ', sel );
-          return false;
-        };
-
-        logger.error( 'isVisible fail: ', sel );
-        logger.error( 'isVisible - ERR Sender: ', e.sender );
-        logger.error( 'isVisible - ERR: ', e );
-
-        return false;
-      };
-    };
-  };
-
-  async essential( method, sel, timeOut = 5000, pause = 1000 ) {
-    logger.info( '--- START ---' );
-    logger.info( 'METHOD: ', method );
-    logger.info( 'SEL: ', sel );
-
-    await this.page.waitForTimeout( pause );
-    try {
+  async innerCore( method, sel, pageBool, timeOut = 5000 ) {
+    logger.info( 'innerCore pageBool: method,, sel', `${ pageBool }: ${ method },, ${ sel }` );
+    if ( pageBool ) {
       await this.page[ method ]( sel, {
         timeout: timeOut
       } );
+    } else {
+      await this[ method ]( sel );      
+    };
+  };
+
+  finalErr( e, sender, method, sel ) {
+    logger.error( `2nd fail - ${ method }: `, sel );
+    logger.error( `${ method } - ERR Sender: `, e.sender );
+    logger.error( `${ method } - ERR: `, e );
+    return false;
+  };
+
+  async coreWrapper( method, sel, timeOut = undefined, pause = undefined ) {
+    let pageFlag = true;
+    // I know, but going quickly for controlling value
+    if ( !timeOut ) {
+      pageFlag = false;
+      timeOut = 5000;
+    };
+    pause == !pause ? pause = 1000 : pause;
+
+    if ( !sel ) {
+      logger.warn( `${ method } CSS arg is falsey` ) ;
+      return false;
+    };
+
+    logger.info( ':: METHOD, SEL :: ', `${ method }, ${ sel }` );
+
+    await this.page.waitForTimeout( pause );
+    try {    
+      await this.innerCore( method, sel, pageFlag, timeOut );
     } catch ( e ) {
+      if ( pageFlag ) {
+        logger.warn( 'Failed the first time: ', sel );
 
-      logger.warn( 'Failed the first time: ', sel );
-      await this.page.waitForTimeout( 1000 );
-      try {
-        await this.page[ method ]( sel, {
-          timeout: timeOut
-        } );
-      } catch ( e ) {
-
-        logger.error( `2nd fail - ${ method }: `, sel );
-        logger.error( `${ method } - ERR Sender: `, e.sender );
-        logger.error( `${ method } - ERR: `, e );
+        await this.page.waitForTimeout( pause );
+        try {
+          await this.innerCore( method, sel, pageFlag, timeOut )
+        } catch ( e ) {
+          logger.warn( 'Failed the 2nd time: ', sel );
+          this.finalErr( e, e.sender, method, sel );
+        };
+      } else {
+        if ( e.sender === undefined ) {
+          logger.warn( `warn: ${ method } received undefined?` );
+          logger.info( 'CSS, ', sel );
+          return false;
+        };
+        this.finalErr( e, e.sender, method, sel );
       };
     };
-    logger.info( '--- END ---' );
+    logger.info( ':: END :: ', method );
+  };
+
+
+  async isVisible( sel, pause = 1000 ) {
+    return await this.coreWrapper( 'isVisibleCommand', sel, undefined, pause );
+  };
+
+  async essential( method, sel, timeOut = 5000, pause = 1000 ) {
+    return await this.coreWrapper( method, sel, timeOut, pause );
   };
 
   async pSelector( sel ) {
