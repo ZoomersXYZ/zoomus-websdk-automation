@@ -5,6 +5,24 @@ class Automation {
     this.page = page;
   };
 
+  // Returns the turn of the method
+  // or Puppeteer ElementHandle
+  async findElFromText( sel, text, method = undefined ) {
+    await page.$$eval( sel, els => {
+      if ( method ) {
+        return els
+          .find( el => 
+            el.textContent === text )
+            [ method ]();
+      } else {
+        return els
+          .find( el => 
+            el.textContent === text );
+      };
+    }, method, text );
+  };
+
+  // Returns boolean
   async isVisibleCommand( sel ) {
     return await this.page.$eval( sel, ( elem ) => 
       ( window.getComputedStyle( elem )
@@ -15,14 +33,15 @@ class Automation {
     );
   };
 
-  async innerCore( method, sel, pageBool, timeOut = 5000 ) {
+  async innerCore( method, sel, pageBool, timeOut = 7500, options = {} ) {
     logger.info( 'innerCore pageBool: method,, sel', `${ pageBool }: ${ method },, ${ sel }` );
     if ( pageBool ) {
-      await this.page[ method ]( sel, {
-        timeout: timeOut
+      return await this.page[ method ]( sel, {
+        timeout: timeOut, 
+        ...options 
       } );
     } else {
-      await this[ method ]( sel );      
+      return await this[ method ]( sel );      
     };
   };
 
@@ -33,14 +52,14 @@ class Automation {
     return false;
   };
 
-  async coreWrapper( method, sel, timeOut = undefined, pause = undefined ) {
+  async coreWrapper( method, sel, timeOut = undefined, pause = undefined, options ) {
     let pageFlag = true;
     // I know, but going quickly for controlling value
     if ( !timeOut ) {
       pageFlag = false;
-      timeOut = 5000;
+      timeOut = 7500;
     };
-    pause == !pause ? pause = 1000 : pause;
+    pause == !pause ? pause = 1500 : pause;
 
     if ( !sel ) {
       logger.warn( `${ method } CSS arg is falsey` ) ;
@@ -51,17 +70,17 @@ class Automation {
 
     await this.page.waitForTimeout( pause );
     try {    
-      await this.innerCore( method, sel, pageFlag, timeOut );
+      return await this.innerCore( method, sel, pageFlag, timeOut, options );
     } catch ( e ) {
       if ( pageFlag ) {
         logger.warn( 'Failed the first time: ', sel );
 
         await this.page.waitForTimeout( pause );
         try {
-          await this.innerCore( method, sel, pageFlag, timeOut )
+          return await this.innerCore( method, sel, pageFlag, timeOut, options )
         } catch ( e ) {
           logger.warn( 'Failed the 2nd time: ', sel );
-          this.finalErr( e, e.sender, method, sel );
+          return this.finalErr( e, e.sender, method, sel );
         };
       } else {
         if ( e.sender === undefined ) {
@@ -69,22 +88,26 @@ class Automation {
           logger.info( 'CSS, ', sel );
           return false;
         };
-        this.finalErr( e, e.sender, method, sel );
+        return this.finalErr( e, e.sender, method, sel );
       };
     };
     logger.info( ':: END :: ', method );
   };
 
-
-  async isVisible( sel, pause = 1000 ) {
+  async isVisible( sel, pause = 1500 ) {
     return await this.coreWrapper( 'isVisibleCommand', sel, undefined, pause );
   };
 
-  async essential( method, sel, timeOut = 5000, pause = 1000 ) {
-    return await this.coreWrapper( method, sel, timeOut, pause );
+  async essential( method, sel, timeOut = 7500, pause = 1500, options = {} ) {
+    return await this.coreWrapper( method, sel, timeOut, pause, options );
   };
 
-  async pSelector( sel ) {
+  async pWaitVisible( sel, timeOut = 7500, pause = 1500 ) {
+    const options = { visible: true };
+    return await this.essential( 'waitForSelector', sel, timeOut, pause, options );
+  };
+
+  async pWaitSelector( sel ) {
     return await this.essential( 'waitForSelector', sel );
   };
 
@@ -93,10 +116,24 @@ class Automation {
   };
 
   async selClick( sel ) {
-    await this.pSelector( sel );
-    await this.isVisible( sel );
-    await this.pSelector( sel );
-    await this.pClick( sel );
+    if ( await this.pWaitSelector( sel ) ) {
+      if ( await this.pWaitVisible( sel ) ) {
+        // await this.pSelector( sel );
+        return await this.pClick( sel );
+      } else {
+        return { bool: false, issue: 'notVisible' };
+      };
+    } else {
+      return { bool: false, issue: 'cantSelect' };
+    }
+  };
+
+  async visibleCheck( sel ) {
+    if ( await this.pWaitSelector( sel ) ) {
+       return await this.pWaitVisible( sel );
+    } else {
+      return { bool: false, issue: 'cantSelect' };
+    }
   };
 };
 

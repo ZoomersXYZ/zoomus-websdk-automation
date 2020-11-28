@@ -5,7 +5,6 @@ async function initialChat( a ) {
   let combo = '';
   logger.info( '-- initialChat BEGINNING --' );
 
-  // Llaunch meeting page
 
   sel = 'div.chat-container';
   const chatOpen = await a.visibleCheck( sel );
