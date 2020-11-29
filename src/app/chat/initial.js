@@ -1,4 +1,4 @@
-const logger = require("./config/logger");
+const logger = require( '../config/logger' );
 
 async function chatinitial( a ) {
   let sel = undefined;
@@ -70,4 +70,4 @@ async function chatinitial( a ) {
 
 };
 
-module.exports = initialChat;
+module.exports = chatInitial;

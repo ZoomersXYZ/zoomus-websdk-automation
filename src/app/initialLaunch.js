@@ -23,4 +23,4 @@ async function initialLaunch( a ) {
   await a.selClick( rootSel + sel );
 };
 
-initialLaunch();
+module.exports = initialLaunch;
