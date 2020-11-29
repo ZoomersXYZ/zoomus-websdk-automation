@@ -1,11 +1,14 @@
 const logger = require( '../config/logger' );
+const bootstrap = require( '../bootstrap' );
 
-async function chatinitial( a ) {
+async function chatinitial() {
   let sel = undefined;
   let rootSel = '';
   let parentSel = '';
   let combo = '';
+  
   logger.info( '-- chatinitial BEGINNING --' );
+  const a = bootstrap();
 
   let pause = 1000;
 
@@ -66,8 +69,6 @@ async function chatinitial( a ) {
   }, text );
 
   toSelection( combo, 'lol' );
-
-
 };
 
 module.exports = chatInitial;
