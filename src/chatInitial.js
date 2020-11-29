@@ -1,11 +1,16 @@
-async function initialChat( a ) {
+const logger = require("./config/logger");
+
+async function chatinitial( a ) {
   let sel = undefined;
   let rootSel = '';
   let parentSel = '';
   let combo = '';
-  logger.info( '-- initialChat BEGINNING --' );
+  logger.info( '-- chatinitial BEGINNING --' );
 
+  let pause = 1000;
 
+  await a.page.waitForTimeout( pause );
+  // Oopen chat if not open
   sel = 'div.chat-container';
   const chatOpen = await a.visibleCheck( sel );
   if ( !chatOpen ) {
@@ -15,42 +20,54 @@ async function initialChat( a ) {
     await a.selClick( sel );
   };
 
-  // action: visible
-  // what: chat popped out
-  parentSel = '#chat-window ';
-  combo = parentSel + sel;
-  const chatPopped = await a.visibleCheck( combo );
+  // @TODO - is Sel actually this or the inner change
+  console.log( 'sel inner or not', sel );
+  sel = 'div.chat-container';
 
-  parentSel = '#wc-container-right';
+  await a.page.waitForTimeout( pause );
+  // action: visible
+  // what: chat on right side
+  parentSel = '#wc-container-right ';
   combo = parentSel + sel;
+  const chatRightSide = await a.visibleCheck( combo );
+  // If chat isn't popped out, pop it out
+  if ( chatRightSide ) {
+    sel = '.chat-header__header > .dropdown > .chat-header__dropdown-menu a';
+    combo = parentSel + sel;
+    await a.findElFromText( combo, 'Pop Out', 'click' );
+  };
   
+  await a.page.waitForTimeout( pause );
+  // Chat should be popped out now
+  parentSel = '#chat-window div.chat-container ';
+  const chatPopped = await a.visibleCheck( parentSel );
   if ( !chatPopped ) {
-    sel = '#wc-footer > div > .footer-button__button > .footer-button__img-layer > .footer-button__chat-icon';
-    await a.selClick( sel );
-  } else if ( await a.visibleCheck( combo ) ) {
-    // if chat is popped
-    sel = ;    
+    logger.error( 'chat should be popped out by now' );
+    return false;
   };
 
-  // dont need to 
+  // crawl through all the elements and remove the span
+  // Then search by text again
+  sel = 'div.chat-receiver-list div.chat-receiver-list__menu > ul div.scroll-content > div > li > a';
+  childSel = ' span.chat-receiver-list__appendix';
+  combo = sel + childSel;
+  const toSelection = ( combo, text ) => await a.page.$$eval( combo, els => {
+    const purified = els
+      .map( el => {
+        const parent = el.parentNode;
+        el.parentNode.removeChild( el );
+        return parent;        
+      } );
+
+    purified
+      .find( el => 
+        el.textContent === text )
+        .click();
+  }, text );
+
+  toSelection( combo, 'lol' );
 
 
-  parentSel = '#wc-container-right '
-  combo = parentSel + sel;
-    
-  rootSel = '.join-dialog > div > .zmu-tabs > .zmu-tabs__tab-container > .zmu-tabs__tabs-list';
-
-  // Next 2 are just to click things just to make sure things are working
-
-  sel = ' > #voip > .tab-bar-node';
-  await a.selClick( rootSel + sel );
-  
-  sel = ' > #phone > .tab-bar-node';
-  await a.selClick( rootSel + sel );
-  
-  // close the overlay
-  sel = ' .zmu-tabs__tab-container > .zm-btn';
-  await a.selClick( rootSel + sel );
 };
 
-initialChat();
+module.exports = initialChat;
