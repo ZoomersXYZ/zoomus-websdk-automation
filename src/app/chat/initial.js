@@ -7,9 +7,9 @@ async function chatinitial() {
   let parentSel = '';
   let combo = '';
   
-  const a = bootstrap();
   const logger = createLogger( 'solo--chatInitial' );
   logger.info( '-- BEGINNING --' );
+  const a = await bootstrap( 'chatInitial' );
 
   let pause = 1000;
 

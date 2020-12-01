@@ -46,10 +46,10 @@ class Automation {
     };
   };
 
-  finalErr( e, sender, method, sel ) {
-    logger.error( `${ method } - ERR: `, e );
-    this.logger.error( `2nd fail - ${ method }: `, sel );
+  defaultErr( e, sender, method, sel, identifier ) {
+    this.logger.error( `${ identifier } fail - ${ method }: `, sel );
     this.logger.error( `${ method } - ERR Sender: `, e.sender );
+    // this.logger.error( `${ method } - ERR: `, e );
     return false;
   };
 
@@ -74,14 +74,14 @@ class Automation {
       return await this.innerCore( method, sel, pageFlag, timeOut, options );
     } catch ( e ) {
       if ( pageFlag ) {
-        logger.warn( 'Failed the first time: ', sel );
+        this.defaultErr( e, e.sender, method, sel, '1st' );
 
         await this.page.waitForTimeout( pause );
         try {
           return await this.innerCore( method, sel, pageFlag, timeOut, options )
         } catch ( e ) {
-          logger.warn( 'Failed the 2nd time: ', sel );
-          return this.finalErr( e, e.sender, method, sel );
+          // this.logger.warn( 'Failed the 2nd time: ', sel );
+          return this.defaultErr( e, e.sender, method, sel, '2nd' );
         };
       } else {
         if ( e.sender === undefined ) {
