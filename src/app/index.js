@@ -3,7 +3,7 @@ const logger = require( './config/logger' );
 
 async function run() {
   // const a = bootstrap();
-  logger.info( '----- THE BEGINNING -----' );
+  logger.info( '----- run() THE BEGINNING -----' );
 };
 
 run();

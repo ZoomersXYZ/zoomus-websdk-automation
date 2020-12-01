@@ -1,9 +1,11 @@
-const logger = require( './config/logger' );
+const createLogger = require( './config/createLogger' );
 
-async function initialStrap( a ) {  
+async function initialStrap( a, name ) {
   let sel = undefined;
-  let rootSel = '';  
-  logger.info( '-- initialStrap BEGINNING --' );
+  let rootSel = '';
+  const logger = createLogger( `${ name }--initialStrap` );
+
+  logger.info( '-- BEGINNING --' );
 
   // Optionally refresh when necessary
   if ( process.env.RELOAD ) {

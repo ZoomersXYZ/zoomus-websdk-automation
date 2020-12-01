@@ -1,10 +1,10 @@
 const log4js = require( 'log4js' );
 
 log4js.configure({
-  appenders: { automation: { type: 'file', filename: 'logs/automation.log' } },
-  categories: { default: { appenders: [ 'automation' ], level: 'info' } } 
+  appenders: { baseCore: { type: 'file', filename: 'logs/automation.log' } },
+  categories: { default: { appenders: [ 'baseCore' ], level: 'info' } } 
 } );
 
-const logger = log4js.getLogger( 'automation' );
+const logger = log4js.getLogger( 'baseCore' );
 
 module.exports = logger;

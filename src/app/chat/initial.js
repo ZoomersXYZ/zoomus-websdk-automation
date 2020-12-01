@@ -1,4 +1,4 @@
-const logger = require( '../config/logger' );
+const createLogger = require( '../config/createLogger' );
 const bootstrap = require( '../bootstrap' );
 
 async function chatinitial() {
@@ -7,8 +7,9 @@ async function chatinitial() {
   let parentSel = '';
   let combo = '';
   
-  logger.info( '-- chatinitial BEGINNING --' );
   const a = bootstrap();
+  const logger = createLogger( 'solo--chatInitial' );
+  logger.info( '-- BEGINNING --' );
 
   let pause = 1000;
 

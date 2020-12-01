@@ -5,7 +5,7 @@ const logger = require( './config/logger' );
 
 const initialStrap = require( './initialStrap' );
 
-async function bootstrap() {
+async function bootstrap( name ) {
 // Initializaing
   const browser = await browserFunc();
   const pages = await browser.pages();
@@ -17,10 +17,9 @@ async function bootstrap() {
   await page.setViewport( { width: 1200, height: 900 } );
 
   logger.info( '-- bootstrapped --' );
-  const a = new Automation( page );
+  const a = new Automation( page, name );
 
-  const initialResult = await initialStrap( a );
-
+  const initialResult = await initialStrap( a, name );
   return a;
 };
 

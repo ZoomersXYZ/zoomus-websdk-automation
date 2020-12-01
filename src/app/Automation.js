@@ -1,8 +1,9 @@
-const logger = require( './config/logger' );
+const createLogger = require( './config/createLogger' );
 
 class Automation {
-  constructor( page ) {
+  constructor( page, name ) {
     this.page = page;
+    this.logger = createLogger( `${ name }--Automation` );
   };
 
   // Returns the turn of the method
@@ -34,7 +35,7 @@ class Automation {
   };
 
   async innerCore( method, sel, pageBool, timeOut = 7500, options = {} ) {
-    logger.info( 'innerCore pageBool: method,, sel', `${ pageBool }: ${ method },, ${ sel }` );
+    this.logger.info( 'innerCore pageBool: method, sel', `${ pageBool }: ${ method },, ${ sel }` );
     if ( pageBool ) {
       return await this.page[ method ]( sel, {
         timeout: timeOut, 
@@ -46,9 +47,9 @@ class Automation {
   };
 
   finalErr( e, sender, method, sel ) {
-    logger.error( `2nd fail - ${ method }: `, sel );
-    logger.error( `${ method } - ERR Sender: `, e.sender );
     logger.error( `${ method } - ERR: `, e );
+    this.logger.error( `2nd fail - ${ method }: `, sel );
+    this.logger.error( `${ method } - ERR Sender: `, e.sender );
     return false;
   };
 
@@ -62,11 +63,11 @@ class Automation {
     pause == !pause ? pause = 1500 : pause;
 
     if ( !sel ) {
-      logger.warn( `${ method } CSS arg is falsey` ) ;
+      this.logger.warn( `${ method } CSS arg is falsey` ) ;
       return false;
     };
 
-    logger.info( ':: METHOD, SEL :: ', `${ method }, ${ sel }` );
+    this.logger.info( ':: METHOD, SEL :: ', `${ method }, ${ sel }` );
 
     await this.page.waitForTimeout( pause );
     try {    
@@ -84,14 +85,14 @@ class Automation {
         };
       } else {
         if ( e.sender === undefined ) {
-          logger.warn( `warn: ${ method } received undefined?` );
-          logger.info( 'CSS, ', sel );
+          this.logger.warn( `warn: ${ method } received undefined?` );
+          this.logger.info( 'CSS, ', sel );
           return false;
         };
         return this.finalErr( e, e.sender, method, sel );
       };
     };
-    logger.info( ':: END :: ', method );
+    this.logger.info( ':: END :: ', method );
   };
 
   async isVisible( sel, pause = 1500 ) {
