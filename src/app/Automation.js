@@ -1,9 +1,10 @@
 const createLogger = require( './config/createLogger' );
 
 class Automation {
-  constructor( page, name ) {
+  constructor( page, name, defaultTimeOut ) {
     this.page = page;
     this.logger = createLogger( `${ name }--Automation` );
+    this.TIMEOUT = defaultTimeOut;
   };
 
   // Returns the turn of the method
@@ -35,7 +36,7 @@ class Automation {
     );
   };
 
-  async innerCore( method, sel, pageBool, timeOut = 7500, options = {} ) {
+  async innerCore( method, sel, pageBool, timeOut = this.TIMEOUT, options = {} ) {
     this.logger.info( 'innerCore pageBool: method, sel', `${ pageBool }: ${ method },, ${ sel }` );
     if ( pageBool ) {
       return await this.page[ method ]( sel, {
@@ -59,7 +60,7 @@ class Automation {
     // I know, but going quickly for controlling value
     if ( !timeOut ) {
       pageFlag = false;
-      timeOut = 7500;
+      timeOut = this.TIMEOUT;
     };
     pause == !pause ? pause = 1500 : pause;
 
@@ -100,11 +101,11 @@ class Automation {
     return await this.coreWrapper( 'isVisibleCommand', sel, undefined, pause );
   };
 
-  async essential( method, sel, timeOut = 7500, pause = 1500, options = {} ) {
+  async essential( method, sel, timeOut = this.TIMEOUT, pause = 1500, options = {} ) {
     return await this.coreWrapper( method, sel, timeOut, pause, options );
   };
 
-  async pWaitVisible( sel, timeOut = 7500, pause = 1500 ) {
+  async pWaitVisible( sel, timeOut = this.TIMEOUT, pause = 1500 ) {
     const options = { visible: true };
     return await this.essential( 'waitForSelector', sel, timeOut, pause, options );
   };
