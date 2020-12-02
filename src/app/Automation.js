@@ -9,7 +9,7 @@ class Automation {
   // Returns the turn of the method
   // or Puppeteer ElementHandle
   async findElFromText( sel, text, method = undefined ) {
-    await page.$$eval( sel, els => {
+    await this.page.$$eval( sel, ( els, method, text, logger, console ) => {
       if ( method ) {
         return els
           .find( el => 
@@ -19,8 +19,9 @@ class Automation {
         return els
           .find( el => 
             el.textContent === text );
+
       };
-    }, method, text );
+    }, method, text, this.logger, console );
   };
 
   // Returns boolean

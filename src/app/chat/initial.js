@@ -1,7 +1,7 @@
 const createLogger = require( '../config/createLogger' );
 const bootstrap = require( '../bootstrap' );
 
-async function chatinitial() {
+async function chatInitial() {
   let sel = undefined;
   let rootSel = '';
   let parentSel = '';
@@ -23,11 +23,7 @@ async function chatinitial() {
     sel = '#wc-footer > div > .footer-button__button > .footer-button__img-layer > .footer-button__chat-icon';
     await a.selClick( sel );
   };
-
-  // @TODO - is Sel actually this or the inner change
-  console.log( 'sel inner or not', sel );
-  sel = 'div.chat-container';
-
+  
   await a.page.waitForTimeout( pause );
   // action: visible
   // what: chat on right side
@@ -55,21 +51,23 @@ async function chatinitial() {
   sel = 'div.chat-receiver-list div.chat-receiver-list__menu > ul div.scroll-content > div > li > a';
   childSel = ' span.chat-receiver-list__appendix';
   combo = sel + childSel;
-  const toSelection = ( combo, text ) => await a.page.$$eval( combo, els => {
-    const purified = els
-      .map( el => {
-        const parent = el.parentNode;
-        el.parentNode.removeChild( el );
-        return parent;        
-      } );
+  const toSelection = async function( combo, text ) { 
+    await a.page.$$eval( combo, els => {
+      const purified = els
+        .map( el => {
+          const parent = el.parentNode;
+          el.parentNode.removeChild( el );
+          return parent;        
+        } );
 
-    purified
-      .find( el => 
-        el.textContent === text )
-        .click();
-  }, text );
+      purified
+        .find( el => 
+          el.textContent === text )
+          .click();
+    }, text );
+  };
 
-  toSelection( combo, 'lol' );
+  await toSelection( combo, 'lol' );
 };
 
 module.exports = chatInitial;

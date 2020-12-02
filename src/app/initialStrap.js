@@ -24,7 +24,7 @@ async function initialStrap( a, name ) {
   };
 
   rootSel = '.join-dialog > div > .zmu-tabs > .zmu-tabs__tab-container > .zmu-tabs__tabs-list';  
-  const overlayVisible = await a.selClick( rootSel + sel );
+  const overlayVisible = await a.selClick( rootSel );
   if ( overlayVisible ) {
     // Next 2 are just to click things just to make sure things are working
     sel = ' > #voip > .tab-bar-node';
