@@ -1,4 +1,5 @@
 const createLogger = require( './config/createLogger' );
+const to = require( 'await-to-js' ).default;
 
 async function initialStrap( a, name ) {
   let sel = undefined;
@@ -10,20 +11,23 @@ async function initialStrap( a, name ) {
   // Optionally refresh when necessary
   if ( process.env.RELOAD ) {
     await a.page.reload( { 
-      waitUntil: [ 
+      waitUntil: [
         'networkidle0', 
+        'load', 
         'domcontentloaded' 
     ] } );
+    await a.page.waitForTimeout( 1000 );
   };
-    
+  
   // Launch meeting page
   sel = '#root > div > .form > .MuiButtonBase-root > .MuiButton-label';
   const onIntroPage = await a.visibleCheck( sel );
   if ( onIntroPage ) {
-    await a.selClick( rootSel + sel );
+    await a.page.waitForTimeout( 2000 );
+    await a.selClick( sel );
   };
 
-  rootSel = '.join-dialog > div > .zmu-tabs > .zmu-tabs__tab-container > .zmu-tabs__tabs-list';  
+  rootSel = '.join-dialog > div > .zmu-tabs > .zmu-tabs__tab-container > .zmu-tabs__tabs-list';
   const overlayVisible = await a.selClick( rootSel );
   if ( overlayVisible ) {
     // Next 2 are just to click things just to make sure things are working

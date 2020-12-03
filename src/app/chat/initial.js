@@ -14,31 +14,34 @@ async function chatInitial() {
   let pause = 1000;
 
   await a.page.waitForTimeout( pause );
-  // Oopen chat if not open
+  // what: visible; chat
   sel = 'div.chat-container';
   const chatOpen = await a.visibleCheck( sel );
   if ( !chatOpen ) {
-    // action: Click.
-    // what: footer chat icon
+    // what: click; footer chat icon
     sel = '#wc-footer > div > .footer-button__button > .footer-button__img-layer > .footer-button__chat-icon';
     await a.selClick( sel );
   };
   
   await a.page.waitForTimeout( pause );
-  // action: visible
-  // what: chat on right side
+  // what: visible; chat on right side
   parentSel = '#wc-container-right ';
   combo = parentSel + sel;
   const chatRightSide = await a.visibleCheck( combo );
   // If chat isn't popped out, pop it out
   if ( chatRightSide ) {
-    sel = '.chat-header__header > .dropdown > .chat-header__dropdown-menu a';
-    combo = parentSel + sel;
-    await a.findElFromText( combo, 'Pop Out', 'click' );
+    // what: click; dropdown menu icon
+    sel = '#chatSectionMenu';
+    await a.selClick( sel );
+    // what: click; via finding element by text; pop out option
+    // sel = '.chat-header__header > .dropdown > .chat-header__dropdown-menu a';
+    // combo = parentSel + sel;
+    // await a.findElFromText( combo, 'Pop Out', 'click' );
   };
   
   await a.page.waitForTimeout( pause );
   // Chat should be popped out now
+  // what: click; the popup just to confirm it is there
   parentSel = '#chat-window div.chat-container ';
   const chatPopped = await a.visibleCheck( parentSel );
   if ( !chatPopped ) {
@@ -46,11 +49,8 @@ async function chatInitial() {
     return false;
   };
 
-  // crawl through all the elements and remove the span
+  // crawl through all the elements and remove the span with superflous info
   // Then search by text again
-  sel = 'div.chat-receiver-list div.chat-receiver-list__menu > ul div.scroll-content > div > li > a';
-  childSel = ' span.chat-receiver-list__appendix';
-  combo = sel + childSel;
   const toSelection = async function( combo, text ) { 
     await a.page.$$eval( combo, els => {
       const purified = els
@@ -67,6 +67,10 @@ async function chatInitial() {
     }, text );
   };
 
+  // what: click; select user 'lol'
+  sel = 'div.chat-receiver-list div.chat-receiver-list__menu > ul div.scroll-content > div > li > a';
+  childSel = ' span.chat-receiver-list__appendix';
+  combo = sel + childSel;
   await toSelection( combo, 'lol' );
 };
 
