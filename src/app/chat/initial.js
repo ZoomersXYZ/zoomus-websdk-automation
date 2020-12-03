@@ -37,6 +37,11 @@ async function chatInitial() {
     // sel = '.chat-header__header > .dropdown > .chat-header__dropdown-menu a';
     // combo = parentSel + sel;
     // await a.findElFromText( combo, 'Pop Out', 'click' );
+    // Or manually go to it via keyboard
+    await a.page.waitForTimeout( 1000 );
+    await page.keyboard.press( 'ArrowDown' );
+    await page.keyboard.press( 'ArrowDown' );
+    await page.keyboard.press( 'Enter' );
   };
   
   await a.page.waitForTimeout( pause );
