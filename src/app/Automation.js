@@ -2,13 +2,14 @@ const createLogger = require( './config/createLogger' );
 const to = require( 'await-to-js' ).default;
 
 class Automation {
-  constructor( page, name, defaultTimeOut ) {
+  constructor( page, name, defaultTimeOut = 7500, defaultPause = 1500 ) {
     // @TODO can this be done? Is it the best way?
     this.to = to;
 
     this.page = page;
     this.logger = createLogger( `${ name }--Automation` );
     this.TIMEOUT = defaultTimeOut;
+    this.PAUSE = defaultPause;
   };
 
   // Returns the turn of the method
@@ -86,7 +87,7 @@ class Automation {
       pageFlag = false;
       timeOut = this.TIMEOUT;
     };
-    pause == !pause ? pause = 1500 : pause;
+    pause == !pause ? pause = this.PAUSE : pause;
 
     if ( !sel ) {
       this.logger.warn( `${ method } CSS arg is falsey` );
@@ -124,36 +125,36 @@ class Automation {
     return await this.coreWrapper( 'isVisibleCommand', sel, undefined, pause );
   };
 
-  async essential( method, sel, timeOut = this.TIMEOUT, pause = 1500, options = undefined ) {
+  async essential( method, sel, timeOut = this.TIMEOUT, pause = this.PAUSE, options = undefined ) {
     return await this.coreWrapper( method, sel, timeOut, pause, options );
   };
 
-  async pWaitVisible( sel, timeOut = this.TIMEOUT, pause = 1500 ) {
+  async pWaitVisible( sel, timeOut = this.TIMEOUT, pause = this.PAUSE ) {
     const options = { visible: true };
     return await this.essential( 'waitForSelector', sel, timeOut, pause, options );
   };
 
-  async pWaitSelector( sel, timeOut = this.TIMEOUT, pause = 1500 ) {
+  async pWaitSelector( sel, timeOut = this.TIMEOUT, pause = this.PAUSE ) {
     const options = { visible: false };
     return await this.essential( 'waitForSelector', sel, timeOut, pause, options );
   };
 
-  async pClick( sel ) {
-    return await this.essential( 'click', sel );
+  async pClick( sel, timeOut = this.TIMEOUT, pause = this.PAUSE ) {
+    return await this.essential( 'click', sel, timeOut, pause );
   };
 
-  async selClick( sel ) {
-    if ( await this.pWaitSelector( sel ) ) {
-      if ( await this.pWaitVisible( sel ) ) {
-        return await this.pClick( sel );
+  async selClick( sel, timeOut = this.TIMEOUT, pause = this.PAUSE ) {
+    if ( await this.pWaitSelector( sel, timeOut, pause ) ) {
+      if ( await this.pWaitVisible( sel, timeOut, pause ) ) {
+        return await this.pClick( sel, timeOut, pause );
       };
     };
     return false;
   };
 
-  async visibleCheck( sel ) {
-    if ( await this.pWaitSelector( sel ) ) {
-      return await this.pWaitVisible( sel );
+  async visibleCheck( sel, timeOut = this.TIMEOUT, pause = this.PAUSE ) {
+    if ( await this.pWaitSelector( sel, timeOut, pause ) ) {
+      return await this.pWaitVisible( sel, timeOut, pause );
     };
     return false;
   };
