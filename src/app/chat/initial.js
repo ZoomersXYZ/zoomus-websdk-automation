@@ -12,11 +12,11 @@ async function chatInitial() {
   await a.page.waitForTimeout( pause );
   // what: visible; chat
   sel = 'div.chat-container';
-  const chatOpen = await a.visibleCheck( sel );
+  const chatOpen = await a.visibleCheck( sel, 2000, 500 );
   if ( !chatOpen ) {
     // what: click; footer chat icon
     sel = '#wc-footer > div > .footer-button__button > .footer-button__img-layer > .footer-button__chat-icon';
-    await a.selClick( sel );
+    await a.selClick( sel, 2500, 750 );
   };
   
   await a.page.waitForTimeout( pause );
