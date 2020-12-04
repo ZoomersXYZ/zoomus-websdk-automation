@@ -27,17 +27,17 @@ async function initialStrap( a, name ) {
     await a.selClick( sel );
   };
 
-  rootSel = '.join-dialog > div > .zmu-tabs > .zmu-tabs__tab-container > .zmu-tabs__tabs-list';
+  rootSel = '.join-dialog > div > .zmu-tabs > .zmu-tabs__tab-container';
   const overlayVisible = await a.selClick( rootSel );
   if ( overlayVisible ) {
     // Next 2 are just to click things just to make sure things are working
-    sel = ' > #voip > .tab-bar-node';
+    sel = ' > .zmu-tabs__tabs-list > #voip > .tab-bar-node';
     await a.selClick( rootSel + sel );
     
-    sel = ' > #phone > .tab-bar-node';
+    sel = ' > .zmu-tabs__tabs-list > #phone > .tab-bar-node';
     await a.selClick( rootSel + sel );
     
-    sel = ' .zmu-tabs__tab-container > .zm-btn';
+    sel = ' > .zm-btn';
     await a.selClick( rootSel + sel );
   };
 };
