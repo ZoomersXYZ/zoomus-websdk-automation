@@ -45,11 +45,6 @@ class Automation {
         elem.offsetHeight
     ) );
     return [ err, result ];
-    // if ( err ) {
-    //   this.defaultErr( err.sender, method, sel, '2nd' );
-    //   return false;
-    // };
-    // return result ? result : true;
   };
 
   async innerCore( method, sel, pageBool, timeOut = this.TIMEOUT, options = undefined ) {
@@ -97,12 +92,12 @@ class Automation {
     this.logger.info( ':: METHOD, SEL :: ', `${ method } ${ JSON.stringify( identifier ) }, ${ sel }` );
 
     await this.page.waitForTimeout( pause );
-    [ err, result ] = await to( this.innerCore( method, sel, pageFlag, timeOut, options ) );
+    [ err, result ] = await this.innerCore( method, sel, pageFlag, timeOut, options );
     
     if ( err ) {
       if ( pageFlag ) {
         this.defaultErr( err.sender, method, sel, '1st' );
-        [ err, result ] = await to( this.innerCore( method, sel, pageFlag, timeOut, options ) );
+        [ err, result ] = await this.innerCore( method, sel, pageFlag, timeOut, options );
         if ( err ) {
           this.defaultErr( err.sender, method, sel, '2nd' );
           return false;
@@ -112,7 +107,7 @@ class Automation {
           this.logger.warn( `warn: ${ method } received undefined?` );
           this.logger.info( 'CSS, ', sel );
         };
-        this.defaultErr( err.sender, method, sel, '2nd' );
+        this.defaultErr( err.sender, method, sel, '1st' );
         return false;
       };
     };

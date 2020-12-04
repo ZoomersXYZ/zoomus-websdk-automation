@@ -2,16 +2,12 @@ const createLogger = require( '../config/createLogger' );
 const bootstrap = require( '../bootstrap' );
 
 async function chatInitial() {
-  let sel = undefined;
-  let rootSel = '';
-  let parentSel = '';
-  let combo = '';
+  let sel, rootSel, parentSel, combo = '';
+  let pause = 1000;
   
   const logger = createLogger( 'solo--chatInitial' );
   logger.info( '-- BEGINNING --' );
-  const a = await bootstrap( 'chatInitial' );
-
-  let pause = 1000;
+  const a = await bootstrap( 'chatInitial' );  
 
   await a.page.waitForTimeout( pause );
   // what: visible; chat
