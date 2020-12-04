@@ -1,5 +1,6 @@
 const createLogger = require( './config/createLogger' );
-const to = require( 'await-to-js' ).default;
+// const to = require( 'await-to-js' ).default;
+const to = promise => promise.then( x => [ null, x ] ).catch( e => [ e ] );
 
 class Automation {
   constructor( page, name, defaultTimeOut = 7500, defaultPause = 1500 ) {
