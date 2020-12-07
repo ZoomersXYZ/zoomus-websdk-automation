@@ -10,8 +10,11 @@ async function chatInitial( bootstrapBool = false ) {
   logger.info( '-- BEGINNING --' );
   const a = await bootstrap( 'chatInitial', bootstrapBool );
 
+  a.TIMEOUT = timeOut;
+  a.PAUSE = pause;
+
   parentSel = '#chat-window div.chat-container ';
-  const chatPopped = await a.visibleCheck( parentSel, timeOut, pause );
+  const chatPopped = await a.visibleCheck( parentSel );
   if ( chatPopped ) {
     logger.info( 'chat already popped out' );
     return true;
@@ -20,11 +23,11 @@ async function chatInitial( bootstrapBool = false ) {
   await a.page.waitForTimeout( pause );
   // what: visible; chat
   sel = 'div.chat-container';
-  const chatOpen = await a.visibleCheck( sel, timeOut, pause );
+  const chatOpen = await a.visibleCheck( sel );
   if ( !chatOpen ) {
     // what: click; footer chat icon
     sel = '#wc-footer > div > .footer-button__button > .footer-button__img-layer > .footer-button__chat-icon';
-    await a.selClick( sel, timeOut, pause );
+    await a.selClick( sel );
   };
   
   await a.page.waitForTimeout( pause );
@@ -32,12 +35,12 @@ async function chatInitial( bootstrapBool = false ) {
   parentSel = '#wc-container-right';
   sel = ' div.chat-container';
   combo = parentSel + sel;
-  const chatRightSide = await a.visibleCheck( combo, timeOut, pause );
+  const chatRightSide = await a.visibleCheck( combo );
   // If chat isn't popped out, pop it out
   if ( chatRightSide ) {
     // what: click; dropdown menu icon
     sel = '#chatSectionMenu';
-    await a.selClick( sel, timeOut, pause );
+    await a.selClick( sel );
     // what: click; via finding element by text; pop out option
     // sel = '.chat-header__header > .dropdown > .chat-header__dropdown-menu a';
     // combo = parentSel + sel;
@@ -54,7 +57,7 @@ async function chatInitial( bootstrapBool = false ) {
   // Chat should be popped out now
   // what: click; the popup just to confirm it is there
   parentSel = '#chat-window div.chat-container ';
-  const chatPoppedFinal = await a.visibleCheck( parentSel, timeOut, pause );
+  const chatPoppedFinal = await a.visibleCheck( parentSel );
   if ( !chatPoppedFinal ) {
     logger.error( 'chat should be popped out by now' );
     return false;

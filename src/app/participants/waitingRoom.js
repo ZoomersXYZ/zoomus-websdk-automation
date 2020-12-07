@@ -10,6 +10,9 @@ async function waitingRoom() {
   logger.info( '-- BEGINNING --' );
   const a = await bootstrap( 'waitingRoom' );
 
+  a.TIMEOUT = timeOut;
+  a.PAUSE = pause;
+
   // [aria-label="View waiting room list"]
   await a.page.waitForTimeout( pause );
   

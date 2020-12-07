@@ -10,14 +10,17 @@ async function participantsInitial( bootstrapBool = false ) {
   logger.info( '-- BEGINNING --' );
   const a = await bootstrap( 'participantsInitial', bootstrapBool );
 
+  a.TIMEOUT = timeOut;
+  a.PAUSE = pause;
+
   await a.page.waitForTimeout( pause );
   // what: visible; chat
   sel = '[aria-label="participant list"]';
-  const usersOpen = await a.visibleCheck( sel, timeOut, pause );
+  const usersOpen = await a.visibleCheck( sel );
   if ( !usersOpen ) {
     // what: click; footer chat icon
     sel = '#wc-footer > div > .footer-button__button > .footer-button__img-layer > .footer-button__participants-icon';
-    await a.selClick( sel, timeOut, pause );
+    await a.selClick( sel );
   };
   
   await a.page.waitForTimeout( pause );
@@ -25,7 +28,7 @@ async function participantsInitial( bootstrapBool = false ) {
   parentSel = '#wc-container-right';
   sel = ' [aria-label="participant list"]';
   combo = parentSel + sel;
-  const usersRightSide = await a.visibleCheck( combo, timeOut, pause );
+  const usersRightSide = await a.visibleCheck( combo );
   // If chat isn't popped out, pop it out
   if ( !usersRightSide ) {
     logger.warning( 
