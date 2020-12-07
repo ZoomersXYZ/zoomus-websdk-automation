@@ -54,8 +54,8 @@ async function chatInitial( bootstrapBool = false ) {
   // Chat should be popped out now
   // what: click; the popup just to confirm it is there
   parentSel = '#chat-window div.chat-container ';
-  const chatPopped = await a.visibleCheck( parentSel, timeOut, pause );
-  if ( !chatPopped ) {
+  const chatPoppedFinal = await a.visibleCheck( parentSel, timeOut, pause );
+  if ( !chatPoppedFinal ) {
     logger.error( 'chat should be popped out by now' );
     return false;
   };
