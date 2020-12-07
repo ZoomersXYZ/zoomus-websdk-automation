@@ -22,19 +22,20 @@ async function initialStrap( a, name ) {
   sel = '#root > div > .form > .MuiButtonBase-root > .MuiButton-label';
   const onIntroPage = await a.visibleCheck( sel );
   if ( onIntroPage ) {
-    await a.page.waitForTimeout( 2000 );
+    await a.page.waitForTimeout( 1500 );
     await a.selClick( sel );
+    await a.page.waitForTimeout( 2500 );
   };
 
   rootSel = '.join-dialog > div > .zmu-tabs > .zmu-tabs__tab-container';
   const overlayVisible = await a.selClick( rootSel );
   if ( overlayVisible ) {
     // Next 2 are just to click things just to make sure things are working
-    sel = ' > .zmu-tabs__tabs-list > #voip > .tab-bar-node';
-    await a.selClick( rootSel + sel );
+    // sel = ' > .zmu-tabs__tabs-list > #voip > .tab-bar-node';
+    // await a.selClick( rootSel + sel );
     
-    sel = ' > .zmu-tabs__tabs-list > #phone > .tab-bar-node';
-    await a.selClick( rootSel + sel );
+    // sel = ' > .zmu-tabs__tabs-list > #phone > .tab-bar-node';
+    // await a.selClick( rootSel + sel );
     
     sel = ' > .zm-btn';
     await a.selClick( rootSel + sel );
