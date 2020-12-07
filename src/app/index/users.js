@@ -1,12 +1,10 @@
 const logger = require( './config/logger' );
 
-const participantsInitial = require( './participants/initial' );
-const participantsWaitingRoom = require( './participants/waitingRoom' );
+const initialUsersRun = require( '../run/users' );
 
-async function run() {
-  logger.info( '----- run() THE BEGINNING -----' );
-  const usersInitialResult = await participantsInitial();
-  const participantsWaitingRoomResult = await participantsWaitingRoomResult();
+async function participantsIndex() {
+  logger.info( '----- participantsRun() THE BEGINNING -----' );
+  await initialUsersRun();
 };
 
-run();
+participantsIndex();

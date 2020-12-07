@@ -1,12 +1,10 @@
 const logger = require( '../config/logger' );
 
-const chatInitial = require( '../chat/initial' );
-const participantsInitial = require( '../participants/initial' );
+const initialIndexRun = require( '../run/initial' );
 
-async function run() {
-  logger.info( '----- run() THE BEGINNING -----' );
-  const chatInitialResult = await chatInitial();
-  const usersInitialResult = await participantsInitial();
+async function initialIndex() {
+  logger.info( '----- initialIndex() THE BEGINNING -----' );
+  await initialIndexRun();
 };
 
-run();
+initialIndex();
