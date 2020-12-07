@@ -1,4 +1,5 @@
 const createLogger = require( '../config/createLogger' );
+const bootstrap = require( '../core/bootstrap' );
 
 async function waitingRoom( a ) {
   let sel, rootSel, parentSel, combo = '';

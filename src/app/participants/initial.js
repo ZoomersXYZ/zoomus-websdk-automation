@@ -1,5 +1,5 @@
 const createLogger = require( '../config/createLogger' );
-const bootstrap = require( '../bootstrap' );
+const bootstrap = require( '../core/bootstrap' );
 
 async function participantsInitial( bootstrapBool = false ) {
   let sel, rootSel, parentSel, combo = '';

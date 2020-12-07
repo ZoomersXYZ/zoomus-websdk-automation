@@ -1,5 +1,5 @@
-const createLogger = require( './config/createLogger' );
-const to = require( './util' ).to;
+const createLogger = require( '../config/createLogger' );
+const to = require( '../util' ).to;
 
 class Automation {
   constructor( page, name, defaultTimeOut = 7500, defaultPause = 1500 ) {

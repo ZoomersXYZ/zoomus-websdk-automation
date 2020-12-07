@@ -1,5 +1,4 @@
-const createLogger = require( './config/createLogger' );
-const to = require( 'await-to-js' ).default;
+const createLogger = require( '../config/createLogger' );
 
 async function initialStrap( a, name ) {
   let sel = undefined;

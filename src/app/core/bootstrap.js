@@ -1,7 +1,7 @@
-const browserFunc = require( './config/browserFunc' );
+const browserFunc = require( '../config/browserFunc' );
 const Automation = require( './Automation' );
 
-const logger = require( './config/logger' );
+const logger = require( '../config/logger' );
 
 const initialStrap = require( './initialStrap' );
 
