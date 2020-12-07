@@ -1,4 +1,4 @@
-const logger = require( './config/logger' );
+const logger = require( '../config/logger' );
 
 const initialUsersRun = require( '../run/users' );
 
@@ -8,3 +8,4 @@ async function participantsIndex() {
 };
 
 participantsIndex();
+return true;

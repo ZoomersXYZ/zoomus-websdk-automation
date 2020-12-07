@@ -1,11 +1,10 @@
 const createLogger = require( '../config/createLogger' );
 const bootstrap = require( '../core/bootstrap' );
 
-async function waitingRoom( a ) {
+async function waitingRoom() {
   let sel, rootSel, parentSel, combo = '';
   let pause = 1000;
   let timeOut = 5000;
-  logger.info( '-- participantsJoin BEGINNING --' );
 
   const logger = createLogger( 'solo--waitingRoom' );
   logger.info( '-- BEGINNING --' );
@@ -31,7 +30,7 @@ async function waitingRoom( a ) {
   combo = parentSel + sel;
   const waitingRoomSoloPerson = await a.visibleCheck( combo );
   if ( waitingRoomSoloPerson ) {
-    await a.click( combo );
+    await a.selClick( combo );
     logger.info(
       'queue - admitted single person via popover'
     );
@@ -46,7 +45,7 @@ async function waitingRoom( a ) {
   sel = '.waiting-room-list-conatiner__title-section > button';
   const multipleWaitingSide = await a.visibleCheck( sel );
   if ( multipleWaitingSide ) {
-    await a.click( sel );
+    await a.selClick( sel );
     logger.info(
       'queue - admitted multiple people via Admit All -- first try'
     );
@@ -59,7 +58,7 @@ async function waitingRoom( a ) {
   combo = parentSel + sel;
   const multipleWaitingNoPanel = await a.visibleCheck( combo );
   if ( multipleWaitingNoPanel ) {
-    await a.click( combo );
+    await a.selClick( combo );
     logger.info(
       'queue - opened panel. Continuing'
     );
@@ -68,9 +67,9 @@ async function waitingRoom( a ) {
   // repeat above
 // check for participants panel specific queue or for View button
   sel = '.waiting-room-list-conatiner__title-section > button';
-  const multipleWaitingSide = await a.visibleCheck( sel );
-  if ( multipleWaitingSide ) {
-    await a.click( sel );
+  const multipleWaitingSideFinal = await a.visibleCheck( sel );
+  if ( multipleWaitingSideFinal ) {
+    await a.selClick( sel );
     logger.info(
       'queue - admitted multiple people via Admit All -- second try'
     );
