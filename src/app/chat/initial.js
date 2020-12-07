@@ -1,14 +1,21 @@
 const createLogger = require( '../config/createLogger' );
 const bootstrap = require( '../bootstrap' );
 
-async function chatInitial() {
+async function chatInitial( bootstrapBool = false ) {
   let sel, rootSel, parentSel, combo = '';
   let pause = 1000;
   let timeOut = 5000;
   
   const logger = createLogger( 'solo--chatInitial' );
   logger.info( '-- BEGINNING --' );
-  const a = await bootstrap( 'chatInitial' );  
+  const a = await bootstrap( 'chatInitial', bootstrapBool );
+
+  parentSel = '#chat-window div.chat-container ';
+  const chatPopped = await a.visibleCheck( parentSel, timeOut, pause );
+  if ( chatPopped ) {
+    logger.info( 'chat already popped out' );
+    return true;
+  };
 
   await a.page.waitForTimeout( pause );
   // what: visible; chat
@@ -43,6 +50,7 @@ async function chatInitial() {
   };
   
   await a.page.waitForTimeout( pause );
+
   // Chat should be popped out now
   // what: click; the popup just to confirm it is there
   parentSel = '#chat-window div.chat-container ';

@@ -5,7 +5,7 @@ const logger = require( './config/logger' );
 
 const initialStrap = require( './initialStrap' );
 
-async function bootstrap( name ) {
+async function bootstrap( name, runInitial = false ) {
 // Initializaing
   const browser = await browserFunc();
   const pages = await browser.pages();
@@ -19,7 +19,10 @@ async function bootstrap( name ) {
   logger.info( '-- bootstrapped --' );
   const a = new Automation( page, name, 15000 );
 
-  const initialResult = await initialStrap( a, name );
+  if ( runInitial ) {
+    const initialResult = await initialStrap( a, name );
+  };
+
   return a;
 };
 
