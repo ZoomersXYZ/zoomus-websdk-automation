@@ -41,10 +41,6 @@ async function chatInitial( bootstrapBool = false ) {
     // what: click; dropdown menu icon
     sel = '#chatSectionMenu';
     await a.selClick( sel );
-    // what: click; via finding element by text; pop out option
-    // sel = '.chat-header__header > .dropdown > .chat-header__dropdown-menu a';
-    // combo = parentSel + sel;
-    // await a.findElFromText( combo, 'Pop Out', 'click' );
     // Or manually go to it via keyboard
     await a.page.waitForTimeout( 1000 );
     await a.page.keyboard.press( 'ArrowDown' );

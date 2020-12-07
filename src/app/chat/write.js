@@ -1,26 +1,28 @@
 const createLogger = require( '../config/createLogger' );
 
+const bootstrap = require( '../core/bootstrap' );
 const initial = require( './initial' );
 
-async function chatWrite( a ) {
+async function chatWrite() {
   let sel, rootSel, parentSel, combo = '';
   let pause = 1000;
   let timeOut = 5000;
   
-  const logger = createLogger( 'solo--chatInitial' );
+  const logger = createLogger( 'solo--chatWrite' );
   logger.info( '-- BEGINNING --' );
+  const a = await bootstrap( 'chatWrite' );
 
-  const result = await initial();
+  // const result = await initial();
 
   // crawl through all the elements and remove the span with superflous info
   // Then search by text again
   const toSelection = async function( combo ) { 
     await a.page.$$eval( combo, ( els ) => {
-      const purified = els
+      return els
         .map( el => {
           const parent = el.parentNode;
-          el.parentNode.removeChild( el );
-          return parent;        
+          el.remove();
+          return parent;
         } );
     } );
   };
