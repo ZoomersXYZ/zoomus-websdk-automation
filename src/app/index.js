@@ -7,6 +7,7 @@ async function run() {
   logger.info( '----- run() THE BEGINNING -----' );
   const chatInitialResult = await chatInitial();
   const usersInitialResult = await participantsInitial();
+  process.kill( process.pid, 'SIGTERM' );
 };
 
 run();
