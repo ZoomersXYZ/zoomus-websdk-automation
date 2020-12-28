@@ -27,7 +27,7 @@ async function chatInitial( bootstrapBool = false ) {
   if ( !chatOpen ) {
     // what: click; footer chat icon
     sel = '#wc-footer > div > .footer-button__button > .footer-button__img-layer > .footer-button__chat-icon';
-    await a.selClick( sel );
+    await a.selClick( sel );    
   };
   
   await a.page.waitForTimeout( pause );
