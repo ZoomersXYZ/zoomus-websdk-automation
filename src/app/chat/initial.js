@@ -13,49 +13,40 @@ async function chatInitial( bootstrapBool = false ) {
   a.TIMEOUT = timeOut;
   a.PAUSE = pause;
 
-  parentSel = '#chat-window div.chat-container ';
-  const chatPopped = await a.visibleCheck( parentSel );
-  if ( chatPopped ) {
-    logger.info( 'chat already popped out' );
-    return true;
-  };
+  // NOTE: Not checking if chat is popped out. This is only an issue if the browser window is too narrow which will mess up checking chat anyway. No need to over optimizie.
 
-  await a.page.waitForTimeout( pause );
-  // what: visible; chat
-  sel = 'div.chat-container';
-  const chatOpen = await a.visibleCheck( sel );
-  if ( !chatOpen ) {
+  ////
+  // STEP ONE: Check if chat is already on the right side. If so, done
+  // STEP TWO: If not, click footer button to open it up
+  ////
+  parentSel = '#wc-container-right';
+  sel = ' #chatSectionMenu';
+  combo = parentSel + sel;
+  const chatToRight = await a.visibleCheck( combo );
+  if ( chatToRight ) {
+    logger.info( 'chat already open on right side' );
+    return true;
+  } else {
     // what: click; footer chat icon
     sel = '#wc-footer > div > .footer-button__button > .footer-button__img-layer > .footer-button__chat-icon';
     await a.selClick( sel );    
   };
   
   await a.page.waitForTimeout( pause );
+
+  ////
+  // STEP THREE: Check if chat is open on right side now. If so, done.
+  // STEP FOUR: If not, it's a bust
+  ////
   // what: visible; chat on right side
   parentSel = '#wc-container-right';
-  sel = ' div.chat-container';
+  sel = ' #chatSectionMenu';
   combo = parentSel + sel;
   const chatRightSide = await a.visibleCheck( combo );
-  // If chat isn't popped out, pop it out
-  if ( chatRightSide ) {
-    // what: click; dropdown menu icon
-    sel = '#chatSectionMenu';
-    await a.selClick( sel );
-    // Or manually go to it via keyboard
-    await a.page.waitForTimeout( 1000 );
-    await a.page.keyboard.press( 'ArrowDown' );
-    await a.page.keyboard.press( 'ArrowDown' );
-    await a.page.keyboard.press( 'Enter' );
-  };
-  
-  await a.page.waitForTimeout( pause );
-
-  // Chat should be popped out now
-  // what: click; the popup just to confirm it is there
-  parentSel = '#chat-window div.chat-container ';
-  const chatPoppedFinal = await a.visibleCheck( parentSel );
-  if ( !chatPoppedFinal ) {
-    logger.error( 'chat should be popped out by now' );
+  if ( !chatRightSide ) {
+    logger.warning( 
+      'participants panel not showing up on the right hand side' 
+    );
     return false;
   };
   
