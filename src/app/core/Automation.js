@@ -1,8 +1,12 @@
 const createLogger = require( '../config/createLogger' );
 const to = require( '../util' ).to;
 
+const Extra = require( './ExtraAutomation' );
+
 class Automation {
   constructor( page, name, defaultTimeOut = 7500, defaultPause = 1500 ) {
+    this.extra = new Extra( page, name, defaultTimeOut, defaultPause );
+
     // @TODO can this be done? Is it the best way?
     this.to = to;
 

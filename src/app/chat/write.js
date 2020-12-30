@@ -1,7 +1,6 @@
 const cheerio = require( 'cheerio' );
 
 const createLogger = require( '../config/createLogger' );
-
 const bootstrap = require( '../core/bootstrap' );
 const initial = require( './initial' );
 
@@ -13,43 +12,24 @@ async function chatWrite() {
   const logger = createLogger( 'solo--chatWrite' );
   logger.info( '-- BEGINNING --' );
   const a = await bootstrap( 'chatWrite' );
-
+  const e = a.extra;
   // const result = await initial();
-
-  // crawl through all the elements and remove the span with superflous info
-  // Then search by text again
-  const toSelection = async function( combo ) { 
-    await a.page.$$eval( combo, ( els ) => {
-      return els
-        .map( el => {
-          const parent = el.parentNode;
-          el.remove();
-          return parent;
-        } );
-    } );
-  };
-
-  const toSelect = async function( ogSel, text ) {
-    await a.page.$$eval( ogSel, ( els, text ) => {
-      return els
-        .find( el => 
-          el.textContent === text )
-          .click();
-    }, text );
-  };
 
   // what: click; select user 'lol'
   sel = 'div.chat-receiver-list div.chat-receiver-list__menu > ul div.scroll-content > div > li > a';
   childSel = ' span.chat-receiver-list__appendix';
   combo = sel + childSel;
-  await toSelection( combo );
-  await toSelect( sel, 'lol' );
+  await e.removeSelector( combo );
+  await e.clickText( sel, 'lol' );
 
-  // new stuff
+
+  ////
+  // Actual used stuff
+  ////
 
   // hover to grab timestamps as well
   sel = 'div.ReactVirtualized__Grid__innerScrollContainer';
-  a.page.hover( sel );
+  await a.page.hover( sel );
 
   // grab all the 
   sel = 'div.chat-item__chat-info';
