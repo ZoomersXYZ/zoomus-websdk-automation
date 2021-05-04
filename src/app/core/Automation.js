@@ -157,6 +157,19 @@ class Automation {
     };
     return false;
   };
+
+  ////
+  // Newer
+  ////
+
+  // Returns array of selectors (as Nodes/Elements)
+  async grabAllSelectors( sel ) {
+    await page.evaluate( ( sel ) => 
+    Array.from( 
+      document.querySelectorAll( sel ), 
+      element => element.outerHTML 
+    ), sel );
+  }
 };
 
 module.exports = Automation;

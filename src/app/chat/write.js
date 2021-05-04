@@ -8,6 +8,7 @@ async function chatWrite() {
   let sel, rootSel, parentSel, combo, $ = '';
   let pause = 1000;
   let timeOut = 5000;
+  let prevChat = '';
   
   const logger = createLogger( 'solo--chatWrite' );
   logger.info( '-- BEGINNING --' );
@@ -33,14 +34,15 @@ async function chatWrite() {
 
   // grab all the 
   sel = 'div.chat-item__chat-info';
-  const theHtml = await page.evaluate( ( sel ) => 
-    Array.from( 
-      document.querySelectorAll( sel ), 
-      element => element.outerHTML 
-    ), sel 
-  );
+  const theHtml = await a.grabAllSelectors( sel );
+  // const theHtml = await page.evaluate( ( sel ) => 
+  //   Array.from( 
+  //     document.querySelectorAll( sel ), 
+  //     element => element.outerHTML 
+  //   ), sel 
+  // );
 
-  const chatHistory = theHtml.map( ( solo ) => {
+  const setupChatHistory = function( solo ) {
     $ = cheerio.load( solo );
     
     const cSender = $( 'span:nth-child( 1 )' );
@@ -56,16 +58,67 @@ async function chatWrite() {
       name: cToWhom.attr( 'data-name' ) 
     };
 
-    const time = $( '.chat-item__chat-info-time-stamp' ).text();
+    const textTime = $( '.chat-item__chat-info-time-stamp' ).text();
     const msg = $( '.chat-item__chat-info-msg' ).text();
+    msgArr = msg.split( /\n/ );
 
-    return {
-      sender, 
-      toWhom, 
-      time, 
-      msg 
+    const final = msgArr.map( ( solo ) => { 
+      return {
+        sender, 
+        toWhom, 
+        textTime, 
+        msg: solo 
+      };
+    } )
+    
+    return final;
+  };
+
+  const chatHistory = theHtml
+    .map( ( solo ) => setupChatHistory( solo ) )
+    .flat( 2 )
+    .reverse();
+
+  const setInitialItem = function( item, value = '' )  {
+    if ( !sessionStorage.getItem( item ) ) {
+      sessionStorage.setItem( item, value );
     };
-  } );
+    sessionStorage.getItem( item );
+  };
+
+  const checkForNewMessages = function( arr ) {
+    const last = {
+      time: new Date( parseInt( setInitialItem( 'lastTime', Number( 0 ) ) ) ), 
+      msg: setInitialItem( 'lastMsg' ), 
+      sender: setInitialItem( 'lastSender' ), 
+      toWhom: setInitialItem( 'lastToWhom' ) 
+    };
+
+    arr.forEach( ( solo, index ) => {
+      solo.time = parse( solo.textTime, 'h:mm:ss a', new Date() );
+
+      // Check if not a new msg
+      if ( 
+        solo.time === last.time && 
+        solo.sender === last.sender &&
+        solo.toWhom === last.toWhom 
+      ) {
+        if ( index === 0 ) {
+          return;
+        };
+
+        // Set the previous array item which is further ahead in time as the new session storage
+        const prev = arr[ index - 1 ];
+        sessionStorage.setItem( 'time', Number( parse( prev.textTime, 'h:mm:ss a', new Date() ) ) );
+        sessionStorage.setItem( 'sender', prev.sender );
+        sessionStorage.setItem( 'toWhom', prev.toWhom );
+        sessionStorage.setItem( 'msg', prev.msg );
+      };
+
+      // check if the message is talking to the bot
+
+
+  // checkForNewMessages( chatHistory );
 };
 
 module.exports = chatWrite;
