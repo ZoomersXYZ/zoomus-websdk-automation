@@ -118,6 +118,107 @@ async function chatWrite() {
       // check if the message is talking to the bot
 
 
+      // obj to make namespace cleaner
+
+      const parameters = {
+        tasks: [
+          '#todo', 
+          '#to-do', 
+          '#task', 
+        ],
+
+        do: [
+          '#doing', 
+          '#working', 
+          '#working_on', 
+          '#workingon', 
+        ], 
+
+        done: [
+          '[x]', 
+          '#done', 
+        ], 
+
+        checkin: [
+          '#note', 
+          '#progress', 
+          '#checkin', 
+          '#chickin', 
+          '#check-in', 
+        ], 
+
+        verbal: [
+          '#verbal', 
+          '#verbal_checkin', 
+          '#verbal_chickin' 
+        ], 
+
+        bye: [
+          '#bye', 
+          '#byefelecia', 
+          '#later', 
+          '#latertater', 
+          '#aurevoir', 
+          '#toodleoo', 
+          '#peace', 
+          '#adieu', 
+          '#sayonara' 
+        ]
+      };
+
+      const parameterFind = ( arr, message ) => arr.find( ( solo ) => 
+        message.search( solo ) != -1
+      );
+
+      if ( parameterFind( parameters.tasks, solo.msg ) ) {
+        
+      } else if ( parameterFind( parameters.do, solo.msg ) ) {
+
+      } else if ( parameterFind( parameters.done, solo.msg ) ) {
+
+      } else if ( parameterFind( parameters.checkin, solo.msg ) ) {
+
+      } else if ( parameterFind( parameters.verbal, solo.msg ) ) {
+
+      };
+
+    } );
+    return true;
+  };
+
+  const findDeluminator = function( str ) { 
+    const possibilities = [
+      [ '0. ', /(\d)\.\s/ ], 
+      [ '0) ', /(\d)\)\s/ ], 
+
+      [ '1. ', /(\d)\.\s/ ], 
+      [ '1) ', /(\d)\)\s/ ], 
+
+      [ '-- ', /--\s/ ], 
+      [ '* ', /\*\s/ ] 
+
+      // [ [ '0 ', '1 ' ], /(\d )/ ], 
+      // [ [ '1 ', '2 ' ], /(\d )/ ] 
+    ];
+    
+    return possibilities.find( ( solo ) => 
+      str.search( solo[ 1 ] ) != -1
+    );
+  };
+
+  const deluminatorLogic = function( delimiter ) { 
+    const whichDelimeter = delimiter[ 0 ];
+
+    if ( delimeter == '1. ' ) {
+
+    } else if ( delimeter == '1) ' ) {
+
+    } else if ( delimeter == '-- ' ) {
+
+    } else if ( delimeter == '* ' ) {
+
+  };
+
   // checkForNewMessages( chatHistory );
 };
 
