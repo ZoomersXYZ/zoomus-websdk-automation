@@ -1,13 +1,14 @@
-const logger = require( '../config/logger' );
+const run = require( '../common/core/run' );
 
 // const participantsInitial = require( '../participants/initial' );
 const participantsWaitingRoom = require( '../participants/waitingRoom' );
 
 async function initialUsersRun() {
-  logger.info( '----- initialUsersRun() THE BEGINNING -----' );
   // const usersInitialResult = await participantsInitial();
-  const participantsWaitingRoomResult = await participantsWaitingRoom();
+  await run( 'initialUsersRun', [ participantsWaitingRoom ] );
+
+  process.kill( process.pid, 'SIGTERM' );
   return true;
 };
 
-module.exports = initialUsersRun;
+initialUsersRun();

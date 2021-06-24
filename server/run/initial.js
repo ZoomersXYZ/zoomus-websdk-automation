@@ -1,12 +1,14 @@
-const logger = require( '../config/logger' );
+const run = require( '../common/core/run' );
 
 const chatInitial = require( '../chat/initial' );
 const participantsInitial = require( '../participants/initial' );
 
 async function initialIndexRun() {
-  logger.info( '----- run() THE BEGINNING -----' );
-  const chatInitialResult = await chatInitial();
-  const usersInitialResult = await participantsInitial();
+  const arr = [ 'chatInitial', 'participantsInitial' ];
+  await run( 'initial', arr );
+
+  // process.kill( process.pid, 'SIGTERM' );
+  return true;
 };
 
 module.exports = initialIndexRun;
