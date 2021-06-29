@@ -217,6 +217,7 @@ async function chatWrite() {
 
     } else if ( delimeter == '* ' ) {
 
+    };
   };
 
   // checkForNewMessages( chatHistory );
