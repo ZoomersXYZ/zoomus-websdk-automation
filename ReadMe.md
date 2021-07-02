@@ -1,6 +1,5 @@
 Example command:
-`https://github.com/inoicouldalwaysturn2u/zoomus-websdk-automation-library
-NAV=GOHOME node server/run/initialstrap.js`
+`NAV=GOHOME node server/run/initialstrap.js`
 
 For now, have to manually place the src folder at https://github.com/inoicouldalwaysturn2u/zoomus-websdk-automation-library to /server/common. So src folder should be renamed common.
 
