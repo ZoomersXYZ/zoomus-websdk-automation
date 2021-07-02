@@ -78,7 +78,7 @@ async function participantsInitial( bootstrapBool = false ) {
       await a.page.waitForTimeout( 500 );
       await a.page.keyboard.press( 'Enter' );
     };
-  }
+  };
   
   return true;
 };

@@ -4,25 +4,17 @@ const createLogger = require( '../config/createLogger' );
 const bootstrap = require( '../core/bootstrap' );
 const initial = require( './initial' );
 
-async function chatWrite() {
+async function chatRead() {
   let sel, rootSel, parentSel, combo, $ = '';
   let pause = 1000;
   let timeOut = 5000;
   let prevChat = '';
   
-  const logger = createLogger( 'solo--chatWrite' );
+  const logger = createLogger( 'solo--chatRead' );
   logger.info( '-- BEGINNING --' );
-  const a = await bootstrap( 'chatWrite' );
+  const a = await bootstrap( 'chatRead' );
   const e = a.extra;
   // const result = await initial();
-
-  // what: click; select user 'lol'
-  sel = 'div.chat-receiver-list div.chat-receiver-list__menu > ul div.scroll-content > div > li > a';
-  childSel = ' span.chat-receiver-list__appendix';
-  combo = sel + childSel;
-  await e.removeSelector( combo );
-  await e.clickText( sel, 'lol' );
-
 
   ////
   // Actual used stuff
@@ -223,4 +215,4 @@ async function chatWrite() {
   // checkForNewMessages( chatHistory );
 };
 
-module.exports = chatWrite;
+module.exports = chatRead;

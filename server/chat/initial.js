@@ -13,7 +13,7 @@ async function chatInitial( bootstrapBool = false ) {
   a.TIMEOUT = timeOut;
   a.PAUSE = pause;
 
-  // NOTE: Not checking if chat is popped out. This is only an issue if the browser window is too narrow which will mess up checking chat anyway. No need to over optimizie.
+  // NOTE: Not checking if chat is popped out. This is only an issue if the browser window is too narrow which will mess up checking chat anyway.
 
   ////
   // STEP ONE: Check if chat is already on the right side. If so, done
